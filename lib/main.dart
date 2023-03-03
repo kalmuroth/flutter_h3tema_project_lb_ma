@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_h3tema_project_lb_ma/countryList.dart';
+import 'package:flutter_h3tema_project_lb_ma/map_page.dart';
 import 'package:go_router/go_router.dart';
 
 void main() => runApp(MyApp());

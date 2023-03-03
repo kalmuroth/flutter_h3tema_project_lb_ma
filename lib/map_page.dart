@@ -6,9 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class MapPage extends StatefulWidget {
-  final String countryName;
-
-  MapPage({required this.countryName});
+  final String countryName; // Nouvelle variable membre
+  MapPage({required this.countryName}); // Nouveau constructeur
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -60,7 +59,12 @@ class _MapPageState extends State<MapPage> {
 
   void _updateMap() async {
     try {
-      _addMarker(LatLng(_latitude, _longitude));
+      GeoCode geoCode = GeoCode();
+      Coordinates location =
+          await geoCode.forwardGeocoding(address: _countryName);
+      print("Latitude: ${location!.latitude}");
+      print("Longitude: ${location!.longitude}");
+      _addMarker(LatLng(location.latitude!, location.longitude!));
     } catch (e) {
       print(e);
     }
