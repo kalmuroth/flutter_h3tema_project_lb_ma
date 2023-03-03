@@ -4,6 +4,10 @@
         android:label="flutter_h3tema_project_lb_ma"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+           <!-- TODO: Add your Google Maps API key here -->
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyA1KYXqarhvTWcOY1DjU8Q4VwdBHxvfE40"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
