@@ -41,10 +41,11 @@ class _MapPageState extends State<MapPage> {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)[0];
+        var latlng = data['capitalInfo']['latlng'];
         _alpha2Code = data['cca2'];
         _capital = data['capital'][0];
-        _latitude = data['latlng'][0];
-        _longitude = data['latlng'][1];
+        _latitude = latlng[0];
+        _longitude = latlng[1];
         print('-------');
         print(_capital);
         print('-------');
