@@ -87,8 +87,8 @@ class _MapPageState extends State<MapPage> {
         onMapCreated: _onMapCreated,
         markers: _markers,
         initialCameraPosition: CameraPosition(
-          target: LatLng(0, 0),
-          zoom: 0.0,
+          target: LatLng(_latitude, _longitude),
+          zoom: 10.0,
         ),
       ),
     );
