@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
               var items = data.data as List<Country>;
               return GridView.builder(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 300,
+                    maxCrossAxisExtent: 400,
                     childAspectRatio: 5 / 2,
                   ),
                   itemCount: items == null ? 0 : items.length,
