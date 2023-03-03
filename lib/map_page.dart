@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocode/geocode.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
+  const MapPage(capital, {Key? key}) : super(key: key);
 
   @override
   _MapPageState createState() => _MapPageState();

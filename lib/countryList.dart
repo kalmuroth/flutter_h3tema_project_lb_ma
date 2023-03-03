@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_h3tema_project_lb_ma/country.dart';
 import 'package:flutter/services.dart' as rootBundle;
+import 'package:flutter_h3tema_project_lb_ma/map_page.dart';
 
 class countryList extends StatelessWidget {
   // This widget is the root of your application.
@@ -36,48 +37,52 @@ class _MyHomePageState extends State<MyHomePage> {
           return ListView.builder(
               itemCount: items == null ? 0 : items.length,
               itemBuilder: (context, index) {
-                return Card(
-                  elevation: 5,
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          child: Image(
-                            image:
-                                NetworkImage(items[index].flags.png.toString()),
-                            fit: BoxFit.fill,
+                return GestureDetector(
+                  onTap: () => (_navigateToNextScreen(
+                      context, items[index].capital.toString())),
+                  child: Card(
+                    elevation: 5,
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            child: Image(
+                              image: NetworkImage(
+                                  items[index].flags.png.toString()),
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                        ),
-                        Expanded(
-                            child: Container(
-                          padding: EdgeInsets.only(bottom: 8),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 8, right: 8),
-                                child: Text(
-                                  items[index].capital.toString(),
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                          Expanded(
+                              child: Container(
+                            padding: EdgeInsets.only(bottom: 8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 8, right: 8),
+                                  child: Text(
+                                    items[index].capital.toString(),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8, right: 8),
-                                child: Text(items[index].region.toString()),
-                              )
-                            ],
-                          ),
-                        ))
-                      ],
+                                Padding(
+                                  padding: EdgeInsets.only(left: 8, right: 8),
+                                  child: Text(items[index].region.toString()),
+                                )
+                              ],
+                            ),
+                          ))
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -89,6 +94,11 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       },
     ));
+  }
+
+  void _navigateToNextScreen(BuildContext context, countryItem) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => MapPage(countryItem)));
   }
 
   Future<List<Country>> ReadJsonData() async {
