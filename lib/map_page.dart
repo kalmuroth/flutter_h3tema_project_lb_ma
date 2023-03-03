@@ -16,8 +16,12 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   late GoogleMapController _controller;
   String _countryName = "";
+  String _country = "";
+  String _languages = "";
+  int _population = 0;
+  int _superficie = 0;
   late String _alpha2Code;
-  late String _capital;
+  String _capital = "";
   late double _latitude;
   late double _longitude;
 
@@ -42,13 +46,19 @@ class _MapPageState extends State<MapPage> {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)[0];
         var latlng = data['capitalInfo']['latlng'];
+        _country = data['name']['common'];
         _alpha2Code = data['cca2'];
         _capital = data['capital'][0];
         _latitude = latlng[0];
         _longitude = latlng[1];
+        _population = data['population'];
+        _languages = data['languages'].values.toList().join(', ');
+        _superficie = data['area'];
+        print('Languages: $_languages');
         print('-------');
-        print(_capital);
+        print('$_country et $_countryName');
         print('-------');
+
         _updateMap();
       } else {
         throw Exception('Failed to load country data');
@@ -61,6 +71,12 @@ class _MapPageState extends State<MapPage> {
   void _updateMap() async {
     try {
       _addMarker(LatLng(_latitude, _longitude));
+      _controller
+          .animateCamera(CameraUpdate.newLatLng(LatLng(_latitude, _longitude)));
+      for (double zoom = 1.0; zoom <= 10.0; zoom += 0.5) {
+        await Future.delayed(Duration(milliseconds: 100));
+        _controller.animateCamera(CameraUpdate.zoomTo(zoom));
+      }
     } catch (e) {
       print(e);
     }
@@ -82,14 +98,37 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Map')),
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        markers: _markers,
-        initialCameraPosition: CameraPosition(
-          target: LatLng(_latitude, _longitude),
-          zoom: 10.0,
-        ),
+      appBar: AppBar(title: Text(_capital)),
+      body: Column(
+        children: [
+          Expanded(
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              markers: _markers,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(0, 0),
+                zoom: 0.0,
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '$_country ',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Capital: $_capital \nPopulation: $_population habitants\nLanguages: $_languages \nSuperficie: $_superficie km²',
+                  style: TextStyle(fontSize: 16.0),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
