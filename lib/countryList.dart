@@ -35,7 +35,11 @@ class _MyHomePageState extends State<MyHomePage> {
               return Center(child: Text("${data.error}"));
             } else if (data.hasData) {
               var items = data.data as List<Country>;
-              return ListView.builder(
+              return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 300,
+                    childAspectRatio: 5 / 2,
+                  ),
                   itemCount: items == null ? 0 : items.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
