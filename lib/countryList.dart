@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 50,
                           child: Image(
                             image:
-                                NetworkImage(items[index].imageURL.toString()),
+                                NetworkImage(items[index].flags.png.toString()),
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -96,6 +96,6 @@ class _MyHomePageState extends State<MyHomePage> {
         await rootBundle.rootBundle.loadString('assets/allCountry.json');
     final list = json.decode(jsondata) as List<dynamic>;
 
-    return list.map((e) => Country.fromJson(e)).toList();
+    return countryFromJson(jsondata);
   }
 }
