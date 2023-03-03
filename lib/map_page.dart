@@ -1,13 +1,14 @@
-import 'dart:html';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocode/geocode.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class MapPage extends StatefulWidget {
-  final String countryName; // Nouvelle variable membre
+  final String countryName;
 
-  MapPage({required this.countryName}); // Nouveau constructeur
+  MapPage({required this.countryName});
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -16,6 +17,10 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   late GoogleMapController _controller;
   String _countryName = "";
+  late String _alpha2Code;
+  late String _capital;
+  late double _latitude;
+  late double _longitude;
 
   void _onMapCreated(GoogleMapController controller) {
     _controller = controller;
@@ -26,16 +31,36 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     _countryName = widget.countryName;
+    _fetchCountryData();
+  }
+
+  void _fetchCountryData() async {
+    try {
+      var url =
+          Uri.parse('https://restcountries.com/v3.1/capital/$_countryName');
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body)[0];
+        _alpha2Code = data['cca2'];
+        _capital = data['capital'][0];
+        _latitude = data['latlng'][0];
+        _longitude = data['latlng'][1];
+        print('-------');
+        print(_capital);
+        print('-------');
+        _updateMap();
+      } else {
+        throw Exception('Failed to load country data');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   void _updateMap() async {
     try {
-      GeoCode geoCode = GeoCode();
-      Coordinates location =
-          await geoCode.forwardGeocoding(address: _countryName);
-      print("Latitude: ${location!.latitude}");
-      print("Longitude: ${location!.longitude}");
-      _addMarker(LatLng(location.latitude!, location.longitude!));
+      _addMarker(LatLng(_latitude, _longitude));
     } catch (e) {
       print(e);
     }
@@ -43,9 +68,9 @@ class _MapPageState extends State<MapPage> {
 
   void _addMarker(LatLng latLng) {
     Marker marker = Marker(
-      markerId: MarkerId(_countryName),
+      markerId: MarkerId(_alpha2Code),
       position: latLng,
-      infoWindow: InfoWindow(title: _countryName),
+      infoWindow: InfoWindow(title: _countryName, snippet: _capital),
     );
     setState(() {
       _markers.add(marker);
