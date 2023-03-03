@@ -97,8 +97,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _navigateToNextScreen(BuildContext context, countryItem) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => MapPage(countryItem)));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MapPage(
+            countryName: countryItem.replaceAll(new RegExp(r'[^\w\s]+'), ''))));
   }
 
   Future<List<Country>> ReadJsonData() async {

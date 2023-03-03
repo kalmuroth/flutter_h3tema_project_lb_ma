@@ -5,7 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocode/geocode.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage(capital, {Key? key}) : super(key: key);
+  final String countryName; // Nouvelle variable membre
+  MapPage({required this.countryName}); // Nouveau constructeur
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -13,18 +14,25 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   late GoogleMapController _controller;
-  String _countryName = "France"; // Nom du pays en anglais
+  String _countryName = "";
 
   void _onMapCreated(GoogleMapController controller) {
     _controller = controller;
     _updateMap();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _countryName = widget.countryName;
+  }
+
   void _updateMap() async {
     try {
+      print(_countryName);
       GeoCode geoCode = GeoCode();
       Coordinates location =
-          await geoCode.forwardGeocoding(address: _countryName);
+          await geoCode.forwardGeocoding(address: '_countryName');
       print("Latitude: ${location!.latitude}");
       print("Longitude: ${location!.longitude}");
       _addMarker(LatLng(location.latitude!, location.longitude!));
